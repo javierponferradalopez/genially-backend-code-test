@@ -1,19 +1,32 @@
 import Genially from "../domain/Genially";
+import { GeniallyId } from "../domain/GeniallyId";
+import GeniallyNotExist from "../domain/GeniallyNotExist";
 import GeniallyRepository from "../domain/GeniallyRepository";
 
 export default class InMemoryGeniallyRepository implements GeniallyRepository {
-  private geniallys: Genially[];
+  private static geniallys: Genially[] = [];
 
   async save(genially: Genially): Promise<void> {
     await this.delete(genially.id);
-    this.geniallys.push(genially);
+    InMemoryGeniallyRepository.geniallys.push(genially);
+
+    return Promise.resolve();
   }
 
-  async find(id: string): Promise<Genially> {
-    return this.geniallys.find((genially) => genially.id === id);
+  async find(id: GeniallyId): Promise<Genially> {
+    const genially = InMemoryGeniallyRepository.geniallys.find((genially) =>
+      genially.id.equals(id)
+    );
+
+    if (genially) return Promise.resolve(genially);
+
+    throw new GeniallyNotExist(id);
   }
 
-  async delete(id: string): Promise<void> {
-    this.geniallys = this.geniallys.filter((genially) => genially.id !== id);
+  async delete(id: GeniallyId): Promise<void> {
+    InMemoryGeniallyRepository.geniallys = InMemoryGeniallyRepository.geniallys
+      .filter((genially) => !genially.id.equals(id));
+
+    return Promise.resolve();
   }
 }

@@ -1,5 +1,7 @@
+import { GeniallyId } from "./GeniallyId";
+
 export default class GeniallyNotExist extends Error {
-  constructor(id: string) {
-    super(`Genially <${id}> does no exist`);
+  constructor(id: GeniallyId) {
+    super(`Genially <${id.toString()}> does no exist`);
   }
 }

@@ -1,10 +1,11 @@
 import express from "express";
 
 // Controllers (route handlers)
-import * as healthController from "../controllers/health";
+import { HealthController } from "../controllers/HealthController";
 
 const router = express.Router();
 
-router.get("/", healthController.check);
+const healthController = new HealthController();
+router.get("/", healthController.run);
 
 export default router;

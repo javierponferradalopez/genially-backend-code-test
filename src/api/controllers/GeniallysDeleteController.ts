@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
-import GeniallyNotExist from "../../contexts/core/genially/domain/GeniallyNotExist";
 import DeleteGeniallyService from "../../contexts/core/genially/application/DeleteGeniallyService";
 import { IController } from "./IController";
+import EntityNotExist from "../../contexts/shared/domain/EntityNotExist";
 
 interface DeleteGeniallyRequest extends Request {
   params: {
@@ -11,16 +11,16 @@ interface DeleteGeniallyRequest extends Request {
 }
 
 export class GeniallysDeleteController implements IController {
-  constructor(private readonly deleteGeniallyService: DeleteGeniallyService) {}
+  constructor(private readonly _deleteGeniallyService: DeleteGeniallyService) {}
 
   async run(req: DeleteGeniallyRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      await this.deleteGeniallyService.execute({ id });
+      await this._deleteGeniallyService.execute({ id });
 
       res.status(httpStatus.NO_CONTENT).send();
     } catch (error) {
-      if (error instanceof GeniallyNotExist) {
+      if (error instanceof EntityNotExist) {
         res.status(httpStatus.NOT_FOUND).send();
       } else {
         res.status(httpStatus.INTERNAL_SERVER_ERROR).send();

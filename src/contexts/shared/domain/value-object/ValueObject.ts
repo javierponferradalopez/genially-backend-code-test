@@ -1,5 +1,11 @@
 export type Primitives = string | number | boolean | Date;
 
+/**
+ * Abstract class that acts as wrapper of the indicated primitive value.
+ *
+ * @abstract
+ * @template T primitive type handled by the class
+ */
 export abstract class ValueObject<T extends Primitives> {
   readonly value: T;
 

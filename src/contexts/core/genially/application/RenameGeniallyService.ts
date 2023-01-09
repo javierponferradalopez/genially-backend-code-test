@@ -1,6 +1,7 @@
+import EntityNotExist from "../../../shared/domain/EntityNotExist";
+import Genially from "../domain/Genially";
 import { GeniallyId } from "../domain/GeniallyId";
 import { GeniallyName } from "../domain/GeniallyName";
-import GeniallyNotExist from "../domain/GeniallyNotExist";
 import GeniallyRepository from "../domain/GeniallyRepository";
 
 type RenameGeniallyServiceRequest = {
@@ -9,20 +10,20 @@ type RenameGeniallyServiceRequest = {
 };
 
 export default class RenameGeniallyService {
-  constructor(private repository: GeniallyRepository) {}
+  constructor(private _repository: GeniallyRepository) {}
 
   public async execute(req: RenameGeniallyServiceRequest): Promise<void> {
     const id = new GeniallyId(req.id);
     const newName = new GeniallyName(req.name);
 
-    const genially = await this.repository.find(id);
+    const genially = await this._repository.find(id);
 
     // throw exception when genially already deleted
-    if (genially.isDeleted()) throw new GeniallyNotExist(id);
+    if (genially.isDeleted()) throw new EntityNotExist(Genially.name, id.value);
 
-    genially.updateName(newName);
-    genially.updateModifiedAt(new Date());
+    genially.name = newName;
+    genially.modifiedAt = new Date();
 
-    return this.repository.save(genially);
+    return this._repository.save(genially);
   }
 }

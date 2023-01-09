@@ -11,7 +11,7 @@ type CreateGeniallyServiceRequest = {
 };
 
 export default class CreateGeniallyService {
-  constructor(private repository: GeniallyRepository) {}
+  constructor(private _repository: GeniallyRepository) {}
 
   public async execute(req: CreateGeniallyServiceRequest): Promise<Genially> {
     const { id, name, description } = req;
@@ -22,7 +22,7 @@ export default class CreateGeniallyService {
       new GeniallyDescription(description),
     );
 
-    await this.repository.save(genially);
+    await this._repository.save(genially);
 
     return genially;
   }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import EntityNotExist from "../../contexts/shared/domain/EntityNotExist";
 import RenameGeniallyService from "../../contexts/core/genially/application/RenameGeniallyService";
-import GeniallyNotExist from "../../contexts/core/genially/domain/GeniallyNotExist";
 import { IController } from "./IController";
 
 interface RenameGeniallyRequest extends Request {
@@ -14,18 +14,18 @@ interface RenameGeniallyRequest extends Request {
 }
 
 export class GeniallysRenameController implements IController {
-  constructor(private readonly renameGeniallyService: RenameGeniallyService) {}
+  constructor(private readonly _renameGeniallyService: RenameGeniallyService) {}
 
   async run(req: RenameGeniallyRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { name } = req.body;
 
-      await this.renameGeniallyService.execute({ id, name });
+      await this._renameGeniallyService.execute({ id, name });
 
       res.status(httpStatus.NO_CONTENT).send();
     } catch (error) {
-      if (error instanceof GeniallyNotExist) {
+      if (error instanceof EntityNotExist) {
         res.status(httpStatus.NOT_FOUND).send();
       } else {
         res.status(httpStatus.INTERNAL_SERVER_ERROR).send();

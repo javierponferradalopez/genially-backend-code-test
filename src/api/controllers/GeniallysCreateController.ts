@@ -12,12 +12,12 @@ interface CreateGeniallyRequest extends Request {
 }
 
 export class GeniallysCreateController implements IController {
-  constructor(private readonly createGeniallyService: CreateGeniallyService) {}
+  constructor(private readonly _createGeniallyService: CreateGeniallyService) {}
 
   async run(req: CreateGeniallyRequest, res: Response): Promise<void> {
     try {
       const { id, name, description } = req.body;
-      await this.createGeniallyService.execute({ id, name, description });
+      await this._createGeniallyService.execute({ id, name, description });
 
       res.status(httpStatus.CREATED).send();
     } catch (error) {

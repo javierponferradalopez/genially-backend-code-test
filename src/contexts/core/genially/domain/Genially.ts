@@ -1,11 +1,12 @@
+import { IEntity } from "../../../shared/domain/IEntity";
 import { GeniallyDescription } from "./GeniallyDescription";
 import { GeniallyId } from "./GeniallyId";
 import { GeniallyName } from "./GeniallyName";
 
-export default class Genially {
+export default class Genially implements IEntity<GeniallyId> {
   private _id: GeniallyId;
   private _name: GeniallyName;
-  private _description?: GeniallyDescription;
+  private _description: GeniallyDescription;
   private _createdAt: Date;
   private _modifiedAt: Date;
   private _deletedAt: Date;
@@ -29,6 +30,10 @@ export default class Genially {
     return this._name;
   }
 
+  set name(newVal: GeniallyName) {
+    this._name = newVal;
+  }
+
   get description(): GeniallyDescription {
     return this._description;
   }
@@ -37,27 +42,60 @@ export default class Genially {
     return this._createdAt;
   }
 
+  set createdAt(newVal: Date) {
+    this._createdAt = newVal;
+  }
+
   get modifiedAt(): Date {
     return this._modifiedAt;
+  }
+
+  set modifiedAt(newVal: Date) {
+    this._modifiedAt = newVal;
   }
 
   get deletedAt(): Date {
     return this._deletedAt;
   }
 
-  public updateDeletedAt(newVal: Date) {
+  set deletedAt(newVal: Date) {
     this._deletedAt = newVal;
-  }
-
-  public updateName(newVal: GeniallyName) {
-    this._name = newVal;
   }
 
   public isDeleted(): boolean {
     return !!this._deletedAt;
   }
 
-  public updateModifiedAt(newVal: Date) {
-    this._modifiedAt = newVal;
+  toPrimitives() {
+    return {
+      id: this.id.value,
+      name: this.name.value,
+      description: this.description?.value,
+      createdAt: this.createdAt,
+      modifiedAt: this.modifiedAt,
+      deletedAt: this.deletedAt,
+    };
+  }
+
+  static fromPrimitives(
+    data: {
+      id: string;
+      name: string;
+      description: string;
+      createdAt: Date;
+      modifiedAt: Date;
+      deletedAt: Date;
+    },
+  ): Genially {
+    const genially = new Genially(
+      new GeniallyId(data.id),
+      new GeniallyName(data.name),
+      data.description && new GeniallyDescription(data.description),
+    );
+    genially.createdAt = data.createdAt;
+    genially.deletedAt = data.deletedAt;
+    genially.modifiedAt = data.modifiedAt;
+
+    return genially;
   }
 }

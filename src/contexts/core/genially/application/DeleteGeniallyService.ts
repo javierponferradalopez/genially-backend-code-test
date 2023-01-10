@@ -1,5 +1,6 @@
+import EntityNotExist from "../../../shared/domain/EntityNotExist";
+import Genially from "../domain/Genially";
 import { GeniallyId } from "../domain/GeniallyId";
-import GeniallyNotExist from "../domain/GeniallyNotExist";
 import GeniallyRepository from "../domain/GeniallyRepository";
 
 type DeleteGeniallyServiceRequest = {
@@ -7,18 +8,20 @@ type DeleteGeniallyServiceRequest = {
 };
 
 export default class DeleteGeniallyService {
-  constructor(private repository: GeniallyRepository) {}
+  constructor(private _repository: GeniallyRepository) {}
 
   public async execute(req: DeleteGeniallyServiceRequest): Promise<void> {
     const id = new GeniallyId(req.id);
 
-    const genially = await this.repository.find(id);
+    const genially = await this._repository.find(id);
 
     // throw exception when genially already deleted
-    if (genially.isDeleted()) throw new GeniallyNotExist(id);
+    if (genially.isDeleted()) {
+      throw new EntityNotExist(Genially.name, id.value);
+    }
 
-    genially.updateDeletedAt(new Date());
+    genially.deletedAt = new Date();
 
-    return this.repository.save(genially);
+    return this._repository.save(genially);
   }
 }

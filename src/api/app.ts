@@ -4,6 +4,9 @@ import express from "express";
 import lusca from "lusca";
 import homeRoutes from "./routes/home";
 import geniallyRoutes from "./routes/genially";
+import container from "./dependency-injection";
+import { EventBus } from "../contexts/shared/domain/EventBus";
+import { IncrementGeniallysCounterOnGeniallyCreated } from "../contexts/core/geniallys-counter/application/IncrementGeniallysCounterOnGeniallyCreated";
 
 // Create Express server
 const app = express();
@@ -17,5 +20,14 @@ app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 app.use("/", homeRoutes);
 app.use("/api/genially", geniallyRoutes);
+
+// configure event bus
+const eventBus = container.get<EventBus>("shared.infrastructure.eventBus");
+eventBus.addSubscribers([
+  // this can be improved by accessing all the subscribers of the dependency container via the tags
+  container.get<IncrementGeniallysCounterOnGeniallyCreated>(
+    "core.geniallysCounter.application.incrementGeniallysCounterOnGeniallyCreated",
+  ),
+]);
 
 export default app;

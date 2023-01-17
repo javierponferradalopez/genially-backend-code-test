@@ -1,6 +1,7 @@
 import { ContainerBuilder } from "node-dependency-injection";
 import { registerApi } from "./api";
-import { registerCore } from "./core";
+import { registerCoreGenially } from "./core/genially";
+import { registerCoreGeniallysCounter } from "./core/geniallys-counter";
 import { registerShared } from "./shared";
 
 /**
@@ -9,7 +10,8 @@ import { registerShared } from "./shared";
  */
 const container = new ContainerBuilder();
 registerShared(container);
-registerCore(container);
+registerCoreGenially(container);
+registerCoreGeniallysCounter(container);
 registerApi(container);
 
 export default container;

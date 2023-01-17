@@ -1,10 +1,11 @@
-import { IEntity } from "../../../shared/domain/IEntity";
+import { AgregateRoot } from "../../../shared/domain/AgregateRoot";
+import { GeniallyCreatedDomainEvent } from "./GeniallyCreatedDomainEvent";
 import { GeniallyDescription } from "./GeniallyDescription";
 import { GeniallyId } from "./GeniallyId";
 import { GeniallyName } from "./GeniallyName";
 
-export default class Genially implements IEntity<GeniallyId> {
-  private _id: GeniallyId;
+export default class Genially extends AgregateRoot {
+  readonly id: GeniallyId;
   private _name: GeniallyName;
   private _description: GeniallyDescription;
   private _createdAt: Date;
@@ -14,16 +15,32 @@ export default class Genially implements IEntity<GeniallyId> {
   constructor(
     id: GeniallyId,
     name: GeniallyName,
-    description?: GeniallyDescription,
+    description: GeniallyDescription,
   ) {
-    this._id = id;
+    super();
+
+    this.id = id;
     this._name = name;
     this._description = description;
     this._createdAt = new Date();
   }
 
-  get id(): GeniallyId {
-    return this._id;
+  static create(
+    id: GeniallyId,
+    name: GeniallyName,
+    description: GeniallyDescription,
+  ) {
+    const genially = new Genially(id, name, description);
+
+    genially.pushDomainEvent(
+      new GeniallyCreatedDomainEvent({
+        aggregateId: genially.id.value,
+        name: genially.name.value,
+        description: genially.description.value,
+      }),
+    );
+
+    return genially;
   }
 
   get name(): GeniallyName {
@@ -90,7 +107,7 @@ export default class Genially implements IEntity<GeniallyId> {
     const genially = new Genially(
       new GeniallyId(data.id),
       new GeniallyName(data.name),
-      data.description && new GeniallyDescription(data.description),
+      new GeniallyDescription(data.description),
     );
     genially.createdAt = data.createdAt;
     genially.deletedAt = data.deletedAt;

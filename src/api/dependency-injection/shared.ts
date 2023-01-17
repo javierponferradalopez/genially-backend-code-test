@@ -1,6 +1,7 @@
 import { ContainerBuilder, Definition } from "node-dependency-injection";
 import { MongoConfigFactory } from "../../contexts/shared/infrastructure/persistence/mongo/MongoConfigFactory";
 import { MongoClientFactory } from "../../contexts/shared/infrastructure/persistence/mongo/MongoClientFactory";
+import { InMemoryAsyncEventBus } from "../../contexts/shared/infrastructure/event-bus/InMemoryAsyncEventBus";
 
 export const registerShared = (container: ContainerBuilder) => {
   const mongoConfigDefinition = new Definition();
@@ -16,4 +17,9 @@ export const registerShared = (container: ContainerBuilder) => {
     "shared.infrastructure.persistence.MongoClient",
     mongoClientDefinition,
   ).addArgument(container.get("shared.infrastructure.persistence.MongoConfig"));
+
+  container.register(
+    "shared.infrastructure.eventBus",
+    InMemoryAsyncEventBus,
+  );
 };

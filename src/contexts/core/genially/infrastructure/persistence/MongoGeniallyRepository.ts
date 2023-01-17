@@ -1,3 +1,4 @@
+import { Nullable } from "../../../../shared/domain/Nullable";
 import { MongoRepository } from "../../../../shared/infrastructure/persistence/mongo/MongoRepository";
 import Genially from "../../domain/Genially";
 import { GeniallyId } from "../../domain/GeniallyId";
@@ -12,10 +13,9 @@ interface GeniallyDocument {
   deletedAt?: Date;
 }
 
-export default class MongoGeniallyRepository
-  extends MongoRepository<Genially, GeniallyId>
+export default class MongoGeniallyRepository extends MongoRepository<Genially>
   implements GeniallyRepository {
-  protected get entityName(): string {
+  protected get agregateRootName(): string {
     return Genially.name;
   }
 
@@ -23,8 +23,12 @@ export default class MongoGeniallyRepository
     return "genially";
   }
 
-  async find(id: GeniallyId): Promise<Genially> {
-    const document = await this.findDocument<GeniallyDocument>(id);
+  save(genially: Genially) {
+    return this.persist(genially.id.value, genially);
+  }
+
+  async find(id: GeniallyId): Promise<Nullable<Genially>> {
+    const document = await this.findDocument<GeniallyDocument>(id.value);
     return Genially.fromPrimitives({
       id: document._id,
       name: document.name,

@@ -5,20 +5,20 @@ type DomainEventAttributes = Record<string, unknown>;
 export abstract class DomainEvent {
   static EVENT_NAME: string;
 
-  readonly aggregateId: string;
+  readonly agregateId: string;
   readonly eventId: string;
   readonly occurredOn: Date;
   readonly eventName: string;
 
   constructor(
-    { eventName, aggregateId, eventId, occurredOn }: {
+    { eventName, agregateId, eventId, occurredOn }: {
       eventName: string;
-      aggregateId: string;
+      agregateId: string;
       eventId?: string;
       occurredOn?: Date;
     },
   ) {
-    this.aggregateId = aggregateId;
+    this.agregateId = agregateId;
     this.eventId = eventId || UuidValueObject.random().value;
     this.occurredOn = occurredOn || new Date();
     this.eventName = eventName;
@@ -27,7 +27,7 @@ export abstract class DomainEvent {
   abstract toPrimitives(): DomainEventAttributes;
 
   static fromPrimitives: (params: {
-    aggregateId: string;
+    agregateId: string;
     eventId: string;
     occurredOn: Date;
     attributes: DomainEventAttributes;
@@ -37,7 +37,7 @@ export abstract class DomainEvent {
 export type DomainEventClass = {
   EVENT_NAME: string;
   fromPrimitives(params: {
-    aggregateId: string;
+    agregateId: string;
     eventId: string;
     occurredOn: Date;
     attributes: DomainEventAttributes;

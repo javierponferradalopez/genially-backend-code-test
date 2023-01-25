@@ -12,13 +12,13 @@ export class GeniallyCreatedDomainEvent extends DomainEvent {
   readonly description: string;
 
   constructor({
-    aggregateId,
+    agregateId,
     name,
     description,
     eventId,
     occurredOn,
   }: {
-    aggregateId: string;
+    agregateId: string;
     eventId?: string;
     name: string;
     description: string;
@@ -26,7 +26,7 @@ export class GeniallyCreatedDomainEvent extends DomainEvent {
   }) {
     super({
       eventName: GeniallyCreatedDomainEvent.EVENT_NAME,
-      aggregateId,
+      agregateId,
       eventId,
       occurredOn,
     });
@@ -42,14 +42,14 @@ export class GeniallyCreatedDomainEvent extends DomainEvent {
     };
   }
 
-  static fromPrimitives({ aggregateId, attributes, occurredOn, eventId }: {
-    aggregateId: string;
+  static fromPrimitives({ agregateId, attributes, occurredOn, eventId }: {
+    agregateId: string;
     attributes: CreateGeniallyDomainEventAttributes;
     eventId: string;
     occurredOn: Date;
   }): DomainEvent {
     return new GeniallyCreatedDomainEvent({
-      aggregateId,
+      agregateId,
       name: attributes.name,
       description: attributes.description,
       eventId,

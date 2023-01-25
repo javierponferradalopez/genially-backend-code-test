@@ -1,0 +1,12 @@
+{
+  "rootDir": ".",
+  "moduleFileExtensions": ["ts", "js"],
+  "transform": {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+  "setupFilesAfterEnv": ["./jest-e2e.suite.ts"],
+  "globalSetup": "./jest-e2e.setup.ts",
+  "globalTeardown": "./jest-e2e.down.ts",
+  "testMatch": ["**/test/**/*.e2e-spec.(ts|js)"],
+  "testEnvironment": "node"
+}

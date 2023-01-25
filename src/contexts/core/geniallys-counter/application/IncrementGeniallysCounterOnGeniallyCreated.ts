@@ -15,6 +15,6 @@ export class IncrementGeniallysCounterOnGeniallyCreated
   }
 
   async on(domainEvent: GeniallyCreatedDomainEvent) {
-    await this._incrementer.run(new GeniallyId(domainEvent.aggregateId));
+    await this._incrementer.run(new GeniallyId(domainEvent.agregateId));
   }
 }

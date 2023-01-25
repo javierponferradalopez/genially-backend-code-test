@@ -4,10 +4,12 @@ import EntityNotExist from "../../contexts/shared/domain/EntityNotExist";
 import RenameGeniallyService from "../../contexts/core/genially/application/RenameGeniallyService";
 import { IController } from "./IController";
 
+export interface GeniallysRenameRequestBody {
+  name: string;
+}
+
 interface RenameGeniallyRequest extends Request {
-  body: {
-    name: string;
-  };
+  body: GeniallysRenameRequestBody;
   params: {
     id: string;
   };

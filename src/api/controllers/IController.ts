@@ -6,5 +6,5 @@ import { Request, Response } from "express";
  * @interface
  */
 export interface IController {
-  run(req: Request, res: Response): Promise<void>;
+  run(req: Request<unknown>, res: Response): Promise<void>;
 }

@@ -3,7 +3,7 @@ import Genially from "../domain/Genially";
 import { GeniallyId } from "../domain/GeniallyId";
 import GeniallyRepository from "../domain/GeniallyRepository";
 
-type DeleteGeniallyServiceRequest = {
+export type DeleteGeniallyServiceRequest = {
   id: string;
 };
 

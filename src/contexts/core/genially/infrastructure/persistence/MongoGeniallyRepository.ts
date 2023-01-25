@@ -1,4 +1,3 @@
-import { Nullable } from "../../../../shared/domain/Nullable";
 import { MongoRepository } from "../../../../shared/infrastructure/persistence/mongo/MongoRepository";
 import Genially from "../../domain/Genially";
 import { GeniallyId } from "../../domain/GeniallyId";
@@ -27,7 +26,7 @@ export default class MongoGeniallyRepository extends MongoRepository<Genially>
     return this.persist(genially.id.value, genially);
   }
 
-  async find(id: GeniallyId): Promise<Nullable<Genially>> {
+  async find(id: GeniallyId): Promise<Genially> {
     const document = await this.findDocument<GeniallyDocument>(id.value);
     return Genially.fromPrimitives({
       id: document._id,

@@ -1,9 +1,28 @@
 import convict from "convict";
 
+export enum Env {
+  PRODUCTION = "production",
+  DEVELOPMENT = "development",
+  TEST = "test",
+}
+
 /**
  * Declaring the configuration variables required for the application
  */
 const config = convict({
+  env: {
+    doc: "The application environment.",
+    format: [Env.PRODUCTION, Env.DEVELOPMENT, Env.TEST],
+    default: Env.DEVELOPMENT,
+    env: "NODE_ENV",
+  },
+  port: {
+    doc: "The port to bind.",
+    format: "port",
+    default: "3000",
+    env: "PORT",
+    arg: "port",
+  },
   persistence: {
     mongo: {
       url: {
@@ -15,5 +34,7 @@ const config = convict({
     },
   },
 });
+
+config.validate({ allowed: "strict" });
 
 export default config;

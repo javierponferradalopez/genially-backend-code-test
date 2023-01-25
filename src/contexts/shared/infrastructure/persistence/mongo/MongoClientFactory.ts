@@ -10,8 +10,6 @@ export class MongoClientFactory {
       ignoreUndefined: true,
     });
 
-    client.connect();
-
     return client;
   }
 }

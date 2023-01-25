@@ -5,7 +5,7 @@ import { GeniallyId } from "../domain/GeniallyId";
 import { GeniallyName } from "../domain/GeniallyName";
 import GeniallyRepository from "../domain/GeniallyRepository";
 
-type CreateGeniallyServiceRequest = {
+export type CreateGeniallyServiceRequest = {
   id: string;
   name: string;
   description: string;

@@ -1,20 +1,22 @@
-import { Request, Response } from "express";
+import { Request as ExpressRequest, Response } from "express";
 import httpStatus from "http-status";
 import CreateGeniallyService from "../../contexts/core/genially/application/CreateGeniallyService";
 import { IController } from "./IController";
 
-interface CreateGeniallyRequest extends Request {
-  body: {
-    id: string;
-    name: string;
-    description?: string;
-  };
+export interface GeniallysCreateRequestBody {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+interface Request extends ExpressRequest {
+  body: GeniallysCreateRequestBody;
 }
 
 export class GeniallysCreateController implements IController {
   constructor(private readonly _createGeniallyService: CreateGeniallyService) {}
 
-  async run(req: CreateGeniallyRequest, res: Response): Promise<void> {
+  async run(req: Request, res: Response): Promise<void> {
     try {
       const { id, name, description } = req.body;
       await this._createGeniallyService.execute({ id, name, description });

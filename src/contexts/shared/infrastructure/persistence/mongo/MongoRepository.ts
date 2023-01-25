@@ -40,10 +40,11 @@ export abstract class MongoRepository<
   async findDocument<D>(id: string) {
     const collection = await this.collection();
 
-    try {
-      return collection.findOne<D>({ _id: id });
-    } catch (e) {
-      throw new EntityNotExist(this.agregateRootName, id);
+    const record = await collection.findOne<D>({ _id: id });
+    if (!!record) {
+      return record;
     }
+
+    throw new EntityNotExist(this.agregateRootName, id);
   }
 }

@@ -1,33 +1,55 @@
-import { json as jsonParse, urlencoded } from "body-parser";
-import compression from "compression";
-import express from "express";
-import lusca from "lusca";
-import homeRoutes from "./routes/home";
-import geniallyRoutes from "./routes/genially";
-import container from "./dependency-injection";
-import { EventBus } from "../contexts/shared/domain/EventBus";
+import { MongoClient } from "mongodb";
 import { IncrementGeniallysCounterOnGeniallyCreated } from "../contexts/core/geniallys-counter/application/IncrementGeniallysCounterOnGeniallyCreated";
+import { EventBus } from "../contexts/shared/domain/EventBus";
+import config from "../contexts/shared/infrastructure/config";
+import container from "./dependency-injection";
+import { Server } from "./server";
 
-// Create Express server
-const app = express();
+export class App {
+  private _server?: Server;
+  private _dataSource?: MongoClient;
 
-// Express configuration
-app.set("port", process.env.PORT || 3000);
-app.use(compression());
-app.use(jsonParse());
-app.use(urlencoded({ extended: true }));
-app.use(lusca.xframe("SAMEORIGIN"));
-app.use(lusca.xssProtection(true));
-app.use("/", homeRoutes);
-app.use("/api/genially", geniallyRoutes);
+  async start() {
+    const port = config.get("port");
+    const env = config.get("env");
 
-// configure event bus
-const eventBus = container.get<EventBus>("shared.infrastructure.eventBus");
-eventBus.addSubscribers([
-  // this can be improved by accessing all the subscribers of the dependency container via the tags
-  container.get<IncrementGeniallysCounterOnGeniallyCreated>(
-    "core.geniallysCounter.application.incrementGeniallysCounterOnGeniallyCreated",
-  ),
-]);
+    this._server = new Server({ port, env });
 
-export default app;
+    await this.configureDataSource();
+    this.configureEventBus();
+
+    return this._server.listen();
+  }
+
+  async stop() {
+    await this._server?.stop();
+    await this._dataSource?.close();
+  }
+
+  get dataSource() {
+    return this._dataSource;
+  }
+
+  get app() {
+    return this._server?.app;
+  }
+
+  private async configureDataSource() {
+    this._dataSource = container.get<MongoClient>(
+      "shared.infrastructure.persistence.MongoClient",
+    );
+    await this._dataSource.connect();
+  }
+
+  private configureEventBus() {
+    // configure event bus
+    const eventBus = container.get<EventBus>("shared.infrastructure.eventBus");
+
+    eventBus.addSubscribers([
+      // this can be improved by accessing all the subscribers of the dependency container via the tags
+      container.get<IncrementGeniallysCounterOnGeniallyCreated>(
+        "core.geniallysCounter.application.incrementGeniallysCounterOnGeniallyCreated",
+      ),
+    ]);
+  }
+}

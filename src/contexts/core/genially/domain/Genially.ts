@@ -34,7 +34,7 @@ export default class Genially extends AgregateRoot {
 
     genially.pushDomainEvent(
       new GeniallyCreatedDomainEvent({
-        aggregateId: genially.id.value,
+        agregateId: genially.id.value,
         name: genially.name.value,
         description: genially.description.value,
       }),

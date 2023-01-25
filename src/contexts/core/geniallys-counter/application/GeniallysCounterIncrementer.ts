@@ -9,13 +9,13 @@ export class GeniallysCounterIncrementer {
   ) {}
 
   async run(geniallyId: GeniallyId) {
-    const geniallyContainer = (await this._repository.first()) ||
+    const geniallyCounter = (await this._repository.first()) ||
       this.initializeCounter();
 
-    if (!geniallyContainer.hasIncremented(geniallyId)) {
-      geniallyContainer.increment(geniallyId);
+    if (!geniallyCounter.hasIncremented(geniallyId)) {
+      geniallyCounter.increment(geniallyId);
 
-      await this._repository.save(geniallyContainer);
+      await this._repository.save(geniallyCounter);
     }
   }
 

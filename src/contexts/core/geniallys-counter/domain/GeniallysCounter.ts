@@ -52,12 +52,12 @@ export default class GeniallysContainer extends AgregateRoot {
       existingGeniallys: string[];
     },
   ): GeniallysContainer {
-    const geniallyContainer = new GeniallysContainer(
+    const geniallysCounter = new GeniallysContainer(
       new GeniallysCounterId(id),
       new GeniallysCounterTotal(total),
       existingGeniallys.map((id) => new GeniallyId(id)),
     );
 
-    return geniallyContainer;
+    return geniallysCounter;
   }
 }

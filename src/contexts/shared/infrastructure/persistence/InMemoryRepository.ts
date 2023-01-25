@@ -10,7 +10,7 @@ import { AgregateRoot } from "../../domain/AgregateRoot";
  */
 export abstract class InMemoryRepository<E extends AgregateRoot> {
   protected abstract get entityName(): string;
-  private store: E[] = [];
+  protected store: E[] = [];
 
   async persist(id: string, entity: E): Promise<void> {
     await this.delete(id);
@@ -18,17 +18,17 @@ export abstract class InMemoryRepository<E extends AgregateRoot> {
   }
 
   async findById(id: string): Promise<E> {
-    const genially = this.store.find((entity) => {
-      entity.toPrimitives().id === id;
-    });
+    const entity = this.store.find((item) => (
+      item.toPrimitives().id === id
+    ));
 
-    if (genially) return genially;
+    if (!!entity) return entity;
 
     throw new EntityNotExist(this.entityName, id);
   }
 
   async delete(id: string): Promise<void> {
     this.store = this.store
-      .filter((genially) => genially.toPrimitives().id !== id);
+      .filter((entity) => entity.toPrimitives().id !== id);
   }
 }

@@ -1,0 +1,8 @@
+{
+  "port": "3001",
+  "persistence": {
+    "mongo": {
+      "url": "mongodb://localhost:27017/backend-test"
+    }
+  }
+}

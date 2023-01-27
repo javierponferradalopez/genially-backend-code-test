@@ -7,6 +7,7 @@ import { MongoClient } from "mongodb";
 import { faker } from "@faker-js/faker";
 import EntityNotExist from "../../../../../../src/contexts/shared/domain/EntityNotExist";
 import AgregateRootDummy from "../__mocks__/AgregateRootDummy";
+import config from "../../../../../../src/contexts/shared/infrastructure/config";
 
 describe("MongoRepository", () => {
   let repository: MongoAgregateRootDummyRepository;
@@ -14,7 +15,7 @@ describe("MongoRepository", () => {
 
   beforeAll(async () => {
     mongoClient = new MongoClient(
-      "mongodb://localhost:27017/mooc-backend-test1",
+      config.get("persistence.mongo.url"),
       {
         ignoreUndefined: true,
       },
